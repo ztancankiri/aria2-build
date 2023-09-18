@@ -3,7 +3,7 @@ FROM hurlenko/aria2-ariang AS build
 ENV LOCAL_DIR /local
 
 RUN apk --no-cache update \
-    && apk --no-cache add gcc g++ make binutils autoconf automake libtool pkgconfig git curl dpkg-dev gettext cppunit-dev libxml2-dev libgcrypt-dev linux-headers lzip
+    && apk --no-cache add gcc g++ make binutils autoconf automake libtool pkgconfig git curl dpkg-dev gettext cppunit-dev libxml2-dev libgcrypt-dev linux-headers lzip ca-certificates
 
 RUN mkdir /zlib && cd /zlib \
     && curl -Ls -o - 'https://www.zlib.net/fossils/zlib-1.2.11.tar.gz' | tar xzf - --strip-components=1 \
@@ -45,6 +45,7 @@ RUN mkdir /aria && cd /aria \
     --with-libexpat --with-libexpat-prefix=${LOCAL_DIR} \
     --with-sqlite3 --with-sqlite3-prefix=${LOCAL_DIR} \
     --with-libcares --with-libcares-prefix=${LOCAL_DIR} \
+    --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
     --prefix=${LOCAL_DIR} \
     LDFLAGS="-L$LOCAL_DIR/lib" PKG_CONFIG_PATH="$LOCAL_DIR/lib/pkgconfig" \
     ARIA2_STATIC=yes \
